@@ -35,7 +35,7 @@ dependencies {
 publishing {
     publications {
         jar(MavenPublication) {
-            groupId 'academy.newtech'
+            groupId 'docedson'
             artifactId 'gs-gradle'
             version '1.0'
             from components.java
