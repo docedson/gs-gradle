@@ -1,17 +1,29 @@
 node {
-  def myGradleContainer = docker.image('gradle:jdk8')
+  def server = Artifactory.server 'docedson.jfrog.io'
+  def myGradleContainer = docker.image('gradle:jdk8-alpine')
   myGradleContainer.pull()
   stage('prep') {
     checkout scm
   }
-  stage('test') {
+  stage('build') {
      myGradleContainer.inside("-v ${env.HOME}/.gradle:/home/gradle/.gradle") {
-       sh 'cd complete && gradle test'
+       sh 'cd complete && ./gradlew build'
      }
   }
-  stage('run') {
+  stage('test') {
      myGradleContainer.inside("-v ${env.HOME}/.gradle:/home/gradle/.gradle") {
-       sh 'cd complete && gradle run'
+       sh 'cd complete && ./gradlew test'
      }
+  }
+  stage('publish') {
+    def uploadSpec = """{
+      "files": [
+        {
+          "pattern": "complete/build/libs/gs-gradle-*.jar",
+          "target": "gradle-dev-local/docedson/gs-gradle/1.0/gs-gradle-1.0-docker.jar"
+        }
+     ]
+    }"""
+    server.upload(uploadSpec)
   }
 }
