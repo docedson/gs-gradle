@@ -20,7 +20,7 @@ node {
       "files": [
         {
           "pattern": "complete/build/libs/gs-gradle-*.jar",
-          "target": "gradle-dev-local/docedson/gs-gradle/1.0/gs-gradle-1.0-docker.jar"
+          "target": "example-gradle-dev-local/"
         }
      ]
     }"""
